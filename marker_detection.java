@@ -31,6 +31,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 
+import com.google.android.gms.common.util.ArrayUtils;
 import com.google.common.util.concurrent.ListenableFuture;
 
 import org.opencv.android.BaseLoaderCallback;
@@ -92,16 +93,9 @@ public class marker_detection extends AppCompatActivity implements View.OnClickL
     //
     // Button firebase_button = (Button) findViewById(R.id.firebase_button);
 
-
-
-
-
-
-
-
-
-
-
+    String[] user_markers;
+    String username;
+    String admin_markers;
 
 
 
@@ -168,19 +162,22 @@ public class marker_detection extends AppCompatActivity implements View.OnClickL
         //infoBtn.setOnClickListener(this);
         Intent intent = getIntent();
         String name = intent.getStringExtra("name");
-        String username = intent.getStringExtra("username");
+        username = intent.getStringExtra("username");
+        user_markers = intent.getStringArrayExtra("markers");
         markerIdText.append(name);
+
+        admin_markers = intent.getStringExtra("admin_markers");
 
 
 
 
         // this is the info button
-        //TODO remove this button
         button_info = (Button)findViewById(R.id.button_info);
         button_info.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), user_info.class );
+                intent.putExtra("admin_markers", admin_markers);
                 intent.putExtra("username",username);
                 startActivity(intent);
             }
@@ -216,22 +213,20 @@ public class marker_detection extends AppCompatActivity implements View.OnClickL
     private void startCameraX(ProcessCameraProvider cameraProvider) {
         cameraProvider.unbindAll();
 
-        // camera selector use case
+        // camera selector
         CameraSelector cameraSelector = new CameraSelector.Builder()
                 .requireLensFacing(CameraSelector.LENS_FACING_BACK)
                 .build();
 
-        //preview use case
+        //preview
         Preview preview =  new Preview.Builder().build();
 
-        //the preview is ready to receive data
+        //the preview receives data
         preview.setSurfaceProvider(previewView.getSurfaceProvider());
 
-//        imageCapture = new ImageCapture.Builder()
-//                .setCaptureMode(ImageCapture.CAPTURE_MODE_MINIMIZE_LATENCY)
-//                .build();
 
-        // image analysis use case
+
+        // image analysis
         imageAnalysis = new ImageAnalysis.Builder()
                 .setOutputImageFormat(ImageAnalysis.OUTPUT_IMAGE_FORMAT_RGBA_8888)
                 .setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST)
@@ -316,7 +311,7 @@ public class marker_detection extends AppCompatActivity implements View.OnClickL
                     //String str  = String.valueOf(myAruco.corners.size()) ;
 
                     // augmentedImageMat = myAruco.augmentImage(augmentedImageMat,replaceBitmap);
-                    augmentedImageMat = myAruco.augmentImage(augmentedImageMat, replacementImageMat);
+                    augmentedImageMat = myAruco.augmentImage(augmentedImageMat, replacementImageMat , user_markers);
                     //Log.d("IN FOR:", String.valueOf(i));
                     Log.d("IN FOR:", String.valueOf(myAruco.id));
                     //Bitmap augmentedBitmap = Bitmap.createBitmap(augmentedImageMat.width(),augmentedImageMat.height(),Bitmap.Config.ARGB_8888);
@@ -428,33 +423,44 @@ public class marker_detection extends AppCompatActivity implements View.OnClickL
 
                     //markerIdText.setText(str);
 
-                    switch (  (int)Double.parseDouble(String.valueOf(myAruco.id.get(i, 0)[0])) / 10  ){
+                    //value 1 = has acces
+                    //value 0 = does not have access
+                    if(ArrayUtils.contains(user_markers,String.valueOf((int)myAruco.id.get(i, 0)[0]))) {
+                        switch ((int) Double.parseDouble(String.valueOf(myAruco.id.get(i, 0)[0])) / 10) {
 
-                        case 1:
+                            case 1:
 
-                            Intent intent = new Intent(getApplicationContext(), ac_remote.class );
-                            intent.putExtra("current_marker_id",(int)Double.parseDouble(String.valueOf(myAruco.id.get(i, 0)[0])));
-                            startActivity(intent);
-                            break;
+                                Intent intent = new Intent(getApplicationContext(), ac_remote.class);
+                                intent.putExtra("current_marker_id", (int) Double.parseDouble(String.valueOf(myAruco.id.get(i, 0)[0])));
+                                startActivity(intent);
+                                break;
 
-                        case 2:
+                            case 2:
 
-                            intent = new Intent(getApplicationContext(), rgb_remote.class );
-                            intent.putExtra("current_marker_id",(int)Double.parseDouble(String.valueOf(myAruco.id.get(i, 0)[0])));
-                            startActivity(intent);
-                            break;
+                                intent = new Intent(getApplicationContext(), rgb_remote.class);
+                                intent.putExtra("current_marker_id", (int) Double.parseDouble(String.valueOf(myAruco.id.get(i, 0)[0])));
+                                startActivity(intent);
+                                break;
 
-                        default:
-                            intent = new Intent(getApplicationContext(), unknown_remote.class );
-                            intent.putExtra("current_marker_id",(int)Double.parseDouble(String.valueOf(myAruco.id.get(i, 0)[0])));
-                            startActivity(intent);
-                            break;
+                            default:
+                                intent = new Intent(getApplicationContext(), unknown_remote.class);
+                                intent.putExtra("current_marker_id", (int) Double.parseDouble(String.valueOf(myAruco.id.get(i, 0)[0])));
+                                intent.putExtra("username", username);
+                                intent.putExtra("access",1);
+                                startActivity(intent);
+                                break;
 
 
+                        }
 
+                    }else{
+                        Intent intent = new Intent(getApplicationContext(), unknown_remote.class);
+                        intent.putExtra("current_marker_id", (int) Double.parseDouble(String.valueOf(myAruco.id.get(i, 0)[0])));
+                        intent.putExtra("username", username);
+                        intent.putExtra("access",0);
+                        startActivity(intent);
+                        break;
                     }
-
-
                 }
             }
 

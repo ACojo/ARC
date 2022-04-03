@@ -48,7 +48,7 @@ public class MainActivity extends AppCompatActivity {
     private DatabaseReference mDatabase;
     private DatabaseReference userDatabase;
 
-
+    String[] available_markers;
 
 
     @Override
@@ -85,7 +85,7 @@ public class MainActivity extends AppCompatActivity {
                 else{
                     //Toast.makeText(marker_detection.this,"click",Toast.LENGTH_SHORT).show();
 
-                    userDatabase.addValueEventListener(new ValueEventListener() {
+                    userDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
                             //Toast.makeText(marker_detection.this,new String(String.valueOf(snapshot.hasChild(user_input))),Toast.LENGTH_SHORT).show();
@@ -96,9 +96,20 @@ public class MainActivity extends AppCompatActivity {
                                 //Toast.makeText(marker_detection.this,db_password,Toast.LENGTH_SHORT).show();
                                 if (db_password.equals(password_input)){
                                     Toast.makeText(MainActivity.this,"Login succesful",Toast.LENGTH_SHORT).show();
+                                    user_class user = snapshot.child(user_input).getValue(user_class.class);
+                                    available_markers = user.marker.split(",");
+                                    String admin_markers = snapshot.child("admin").child("marker").getValue(String.class);
+
+
                                     Intent intent = new Intent(getApplicationContext(), marker_detection.class );
+
+                                    intent.putExtra("markers",available_markers);
                                     intent.putExtra("name", db_name);
                                     intent.putExtra("username",user_input);
+                                    intent.putExtra("admin_markers", admin_markers);
+                                    id_username.setText("");
+                                    id_password.setText("");
+
                                     startActivity(intent);
                                 }
                                 else{
