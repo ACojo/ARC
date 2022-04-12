@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "1026140020812",
+    "project_id": "arc-db-46a32",
+    "storage_bucket": "arc-db-46a32.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1026140020812:android:6848f86d7dd34515ba54e9",
+        "android_client_info": {
+          "package_name": "com.myapp.arc"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1026140020812-r2nbu39abm8lsap6dt68mrnuhbir0lrm.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCVFPN8pRtaZaCkszeli4R7yAGZCr2FoKc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1026140020812-r2nbu39abm8lsap6dt68mrnuhbir0lrm.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
