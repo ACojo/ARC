@@ -46,13 +46,16 @@ public class MainActivity extends AppCompatActivity {
     EditText id_password;
     Button id_button;
 
+    //the new branch works
     private DatabaseReference mDatabase;
     private DatabaseReference userDatabase;
     private encryption Encryption;
+    private String hash = "8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918";
+    private String must_delete="da/|||2222|";
 
     String[] available_markers;
 
-
+    //test
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -121,10 +124,10 @@ public class MainActivity extends AppCompatActivity {
 
                                 if (db_password.equals(hashed_password)){
                                     Toast.makeText(MainActivity.this,"Login succesful",Toast.LENGTH_SHORT).show();
-                                    user_class user = snapshot.child(user_input).getValue(user_class.class);
+                                    user_class user = snapshot.child(hashed_username).getValue(user_class.class);
                                     available_markers = user.marker.split(",");
-                                    String admin_markers = snapshot.child("admin").child("marker").getValue(String.class);
-
+                                    String admin_markers = snapshot.child(hash).child("marker").getValue(String.class);
+                                    //done sada
 
                                     Intent intent = new Intent(getApplicationContext(), marker_detection.class );
 

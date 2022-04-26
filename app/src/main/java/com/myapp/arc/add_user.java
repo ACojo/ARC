@@ -138,6 +138,7 @@ public class add_user extends AppCompatActivity {
 //                                            new_marker += user.marker.charAt(i);
 //                                        }
 
+
                                         String[] user_markers = user.marker.split(",");
                                         for (int i = 0 ; i <user_markers.length; i ++){
                                             if ( !user_markers[i].equals(id) ){
