@@ -147,16 +147,28 @@ public class user_info extends AppCompatActivity {
                 if (user != null) {
                     available_markers = user.marker.split(",");
 
-                    if (!available_markers[0].equals("-1")){
+                    if (!available_markers[0].equals("") ){
 
                         index = 0;
-                        id_marker_description.setText("here");
+                        //id_marker_description.setText("here");
                         id_previous_button.setEnabled(false);
                         Firebase_marker_listener(available_markers[index],markerDatabase);
                         if (available_markers.length == 1){
                             id_next_button.setEnabled(false);
                             id_previous_button.setEnabled(false);
                         }
+                    }
+                    else{// if the user does not have any marker
+                        id_next_button.setEnabled(false);
+                        id_previous_button.setEnabled(false);
+                        Bitmap replaceBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.img100);
+                        id_marker_img.setImageBitmap(replaceBitmap);
+
+
+                        id_marker_command.setText("Command: Not available");
+                        id_marker_name_text.setText("Name: Not available");
+                        id_marker_description.setText("Description: Not available");
+                        id_current_marker_text.setText("Marker id: Not available");
                     }
                 }
 
@@ -256,6 +268,7 @@ public class user_info extends AppCompatActivity {
                     }
 
                 }
+                else Toast.makeText(user_info.this, "Marker not found", Toast.LENGTH_SHORT).show();
 
             }
 
