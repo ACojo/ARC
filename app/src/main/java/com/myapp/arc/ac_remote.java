@@ -29,7 +29,7 @@ public class ac_remote extends AppCompatActivity {
     SeekBar speed_seekbar;
     Switch rotation_switch;
     int speed_value;
-    String url = "http://192.168.1.103:5000/ac_motor/";
+    String url = "http://192.168.1.101:5000/ac_motor/";
     public RequestQueue queue;
 
 

@@ -73,7 +73,7 @@ public class user_info extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_info);
-
+        //FirebaseDatabase.getInstance("https://arc-db-46a32-default-rtdb.europe-west1.firebasedatabase.app/").setPersistenceEnabled(true);
         //to keep track of the current marker that is displayed
         // -1 meaning no marker is available
         index = -1;
@@ -103,8 +103,12 @@ public class user_info extends AppCompatActivity {
 
 
         mdatabase =  FirebaseDatabase.getInstance("https://arc-db-46a32-default-rtdb.europe-west1.firebasedatabase.app/").getReference();
+
         userDatabase = mdatabase.child("users");
         markerDatabase = mdatabase.child("markers");
+
+        userDatabase.keepSynced(true);
+        markerDatabase.keepSynced(true);
 
         Intent intent = getIntent();
         username = intent.getStringExtra("username");

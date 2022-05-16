@@ -75,10 +75,17 @@ public class MainActivity extends AppCompatActivity {
 
         }
 
+        try {
+            FirebaseDatabase.getInstance("https://arc-db-46a32-default-rtdb.europe-west1.firebasedatabase.app/").setPersistenceEnabled(true);
+        }catch (Exception e){
+            Log.d("OFFLINE DATABASE", "already enabled this feature");
+        }
 
         //mDatabase = FirebaseDatabase.getInstance().getReferenceFromUrl("https://arc-db-46a32-default-rtdb.europe-west1.firebasedatabase.app/");
         mDatabase = FirebaseDatabase.getInstance("https://arc-db-46a32-default-rtdb.europe-west1.firebasedatabase.app/").getReference();
+
         userDatabase = mDatabase.child("users");
+        userDatabase.keepSynced(true);
 
 
         id_button.setOnClickListener(new View.OnClickListener() {
