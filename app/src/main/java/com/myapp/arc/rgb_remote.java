@@ -41,7 +41,7 @@ public class rgb_remote extends AppCompatActivity {
 
 
     //the http part
-    String url = "http://192.168.1.103:5000/led/";
+    String url = "http://192.168.1.101:5000/led/";
     //String url = "http://192.168.1.105:5000/led/";
 
     @Override
