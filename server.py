@@ -9,6 +9,8 @@ from motor_control import *
 #from time import sleep
 import time
 import RPi.GPIO as GPIO
+import os
+
 
 led = RGB_led()
 motor = Motor_control()
@@ -31,7 +33,7 @@ def setup():
 
 
 # for the url
-@app.route('/led/' , methods=['POST' , 'GET', 'PUT' ])
+@app.route('/led/' , methods=[ 'GET', 'PUT' ])
 def index_rgb():
         global led
         if request.method == "GET" :
@@ -54,7 +56,7 @@ def index_rgb():
                 return "NOT WELCOME"
 
 
-@app.route('/ac_motor/' , methods=['PUT', 'GET' , 'POST'])
+@app.route('/ac_motor/' , methods=['PUT', 'GET'])
 def index_motor():
         global motor
         if request.method == "GET":
@@ -62,13 +64,20 @@ def index_motor():
         if request.method == "PUT":
                 data = request.get_data().decode('UTF-8')
                 data = data.split("&")
-                #motor_pwm_value = data[0].split("=")[1]
-                #change_pwm(motor,motor_pwm_value)
+                rotation_data_value = False
+                rotation_data_value = False
+
                 if int(data[0].split("=")[1]) != motor.current_pwm:
                         motor.current_pwm = int(data[0].split("=")[1])
-                        motor.change_rotation
-                motor.change_duty_cycle()
-                print(data)
+                        motor.change_duty_cycle()
+                if data[1].split("=")[1] == "true":
+                        rotation_data_value = True
+
+                if motor.rotation != rotation_data_value:
+                        motor.rotation = rotation_data_value
+                        motor.change_rotation()
+                        print(rotation_data_value)
+
                 return  "HELLO MOTOR"
         else:
                 return "NOT WELCOME"
@@ -76,21 +85,24 @@ def index_motor():
 
 
 
-@app.route('/',methods = ['GET', 'POST'])
+@app.route('/',methods = ['GET'])
 def test():
         return "GOOD"
 
 
 
 if __name__ == "__main__":
-        #led = RGB_led()
         setup()
+
         th_server = Thread(target = app.run, args = ('0.0.0.0',))
 
-        th_motor = Thread(target = motor_loop , args = (motor,))
         t_rgb = Thread(target = rgb_loop , args = (led,))
-
 
         th_server.start()
 
         t_rgb.start()
+
+        x = input()
+        if x == 'x':
+                print("BYE")
+                os._exit(0)
